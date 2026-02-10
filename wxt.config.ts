@@ -8,7 +8,10 @@ export default defineConfig({
     description: '__MSG_extension_description__',
     host_permissions: ['*://*.wikipedia.org/*'],
     name: '__MSG_extension_name__',
-    permissions: ['storage', 'tabs'],
+    permissions: ['storage', 'tabs', 'sidePanel'],
+    side_panel: {
+      default_path: '/sidepanel.html',
+    },
   },
   modules: [
     '@wxt-dev/module-react',
