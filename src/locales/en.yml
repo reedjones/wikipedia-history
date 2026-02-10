@@ -1,4 +1,4 @@
 extension:
-  name: wxt-starter
-  description: https://github.com/mefengl/wxt-starter
+  name: Wikipedia History
+  description: Automatically collect and organize Wikipedia pages you browse with search, filter, and tagging capabilities
 hello: Hello

@@ -6,9 +6,12 @@ export default defineConfig({
   manifest: {
     default_locale: 'en',
     description: '__MSG_extension_description__',
-    host_permissions: [],
+    host_permissions: ['*://*.wikipedia.org/*'],
     name: '__MSG_extension_name__',
-    permissions: [],
+    permissions: ['storage', 'tabs', 'sidePanel'],
+    side_panel: {
+      default_path: '/sidepanel.html',
+    },
   },
   modules: [
     '@wxt-dev/module-react',
