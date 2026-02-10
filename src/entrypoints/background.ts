@@ -17,21 +17,34 @@ export default defineBackground(() => {
   })
 
   // Handle messages from content script
-  browser.runtime.onMessage.addListener((message, _sender) => {
+  browser.runtime.onMessage.addListener(async (message, _sender) => {
     if (message.type === 'SAVE_WIKI_PAGE') {
       const { lang, summary, title, url } = message.data
 
-      const page: WikiPage = {
-        id: crypto.randomUUID(),
-        lang,
-        summary,
-        tags: [],
-        timestamp: Date.now(),
-        title,
-        url,
-      }
+      // Check if page already exists
+      const allPages = await storage.getAllPages()
+      const existingPage = allPages.find(p => p.url === url)
 
-      storage.addPage(page).catch(console.error)
+      if (existingPage) {
+        // Update the existing page's timestamp and summary
+        existingPage.timestamp = Date.now()
+        if (summary)
+          existingPage.summary = summary
+        await storage.addPage(existingPage)
+      }
+      else {
+        // Create new page entry
+        const page: WikiPage = {
+          id: crypto.randomUUID(),
+          lang,
+          summary,
+          tags: [],
+          timestamp: Date.now(),
+          title,
+          url,
+        }
+        await storage.addPage(page)
+      }
     }
   })
 

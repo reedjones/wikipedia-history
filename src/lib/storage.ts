@@ -126,7 +126,7 @@ class StorageService {
       await this.init()
     }
     if (!this.db) {
-      throw new Error('Database not initialized')
+      throw new Error('Failed to initialize IndexedDB. Please check browser settings and try again.')
     }
     return this.db
   }

@@ -4,7 +4,19 @@ export default defineContentScript({
     const extractPageData = () => {
       const url = window.location.href
       const title = document.querySelector('#firstHeading')?.textContent || document.title
-      const summary = document.querySelector('.mw-parser-output > p')?.textContent?.slice(0, 500) || ''
+
+      // Find the first non-empty paragraph that's part of the main article
+      const paragraphs = document.querySelectorAll('.mw-parser-output > p')
+      let summary = ''
+      for (const p of paragraphs) {
+        const text = p.textContent?.trim() || ''
+        // Skip empty paragraphs and disambiguation notices
+        if (text.length > 50 && !p.classList.contains('mw-empty-elt')) {
+          summary = text.slice(0, 500)
+          break
+        }
+      }
+
       const lang = url.match(/\/\/([a-z]{2})\.wikipedia\.org/)?.[1] || 'en'
 
       return {

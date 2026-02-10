@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import type { WikiPageFilter } from '@/lib/types'
@@ -10,6 +10,7 @@ import { orpc } from '@/lib/orpc/client'
 function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const queryClient = useQueryClient()
 
   const filter: WikiPageFilter = {
     searchQuery: searchQuery || undefined,
@@ -31,8 +32,8 @@ function App() {
       orpc.updatePageTags.mutate({ id, tags }),
     onSuccess: () => {
       refetch()
-      // Refetch tags to update tag list
-      orpc.getAllTags.mutate().catch(console.error)
+      // Invalidate tags query to refresh tag list
+      queryClient.invalidateQueries({ queryKey: orpc.getAllTags.queryOptions().queryKey })
     },
   })
 
